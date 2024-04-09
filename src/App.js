@@ -1,38 +1,54 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
-function Square() {
-    return <button className="square">0</button>;
+function Square({ value }) {
+    return <button className="square">{value}</button>;
   }
 
-export default function Board({ n_rows }) {
-  let length = 0;
-  for (let i = 0; i < n_rows; i++) {
-    length += i;
-  }
-
-  const renderSquare = (index) => (
-    <Square key={index} />
+export default function Board() {
+  const renderSquare = (value) => (
+    <Square key={value} value={value} />
   );
 
-  const renderCells = () => {
-    let cells = Array(length).fill(null);
-    let counter = 0;
+  // Combine, refactor
+  const renderColDot = () => (
+    <div className="coldot"></div>
+  )
+
+  const renderRowDot = () => (
+    <div className="rowdot"></div>
+  )
+
+  const renderCells = (n_rows=3) => {
+    let board = [];
+    let length = (n_rows * (n_rows + 1))/2;
+    let cell_index = length;
     for (let row_i = n_rows; row_i > 0; row_i--) {
       const rowSquares = Array(row_i).fill(null);
+      const rowDots = Array(row_i).fill(null);
       const leftPadding = Array(n_rows - row_i).fill(<div className="empty-square" />);
       for (let col_i = row_i - 1; col_i >= 0; col_i--) {
-        cellsCopy.push(renderSquare(counter++));
+        cell_index--;
+        rowSquares.push(renderSquare(cell_index + 1));
+        rowSquares.push(renderColDot(cell_index + 1));
+        rowDots.push(renderRowDot(cell_index + 1))
       }
-      const row = (
+      const squareRow = (
         <div key={row_i} className="board-row centered-row" >
           {leftPadding}
           {rowSquares}
         </div>
       );
-      cells.push(row);
+      const dotRow = (
+        <div key={row_i} className="board-row centered-row" >
+        {leftPadding}
+        {rowDots}
+      </div>
+      );
+      board.push(squareRow);
+      board.push(dotRow);
     }
-    return cells;
-  }
+    return board;
+  };
 
   return <>{renderCells()}</>;
 }
