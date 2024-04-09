@@ -71,11 +71,18 @@
     width: 34px;
   }
   
-  .board-row:after {
-    clear: both;
-    content: '';
-    display: table;
+  .board-row {
+    display: flex;
+    flex-direction: row;
+    margin: 0 auto;
+    justify-content: 'center';
   }
+
+  .centered-row {
+    display: flex;
+    justify-content: center;
+  }  
+
   
   .status {
     margin-bottom: 10px;
