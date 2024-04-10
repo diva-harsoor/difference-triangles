@@ -1,4 +1,5 @@
-* {
+*
+{
     box-sizing: border-box;
   }
   
@@ -55,6 +56,16 @@
     margin: 20px;
     padding: 0;
   }
+
+  .circle {
+    height: 100px;
+    width: 100px;
+    background-color: #fff;
+    border-radius: 50%;
+    font-size: 24px;
+    font-weight: bold;
+    border: 1px solid #999;
+  }
   
   .square {
     background: #fff;
@@ -106,12 +117,41 @@
   .status {
     margin-bottom: 10px;
   }
-  .game {
+
+  .cell-container {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    align-items: center;
   }
   
+  .cell-row {
+    display: flex;
+    align-items: center;
+  }
+    
   .game-info {
     margin-left: 20px;
   }
+
+  .rhombus {
+    margin: 10px 10px 0px 10px;
+    width: 20px;
+    height: 20px;
+  }
   
+  .tilt-right {
+    margin-left: 20px;
+    transform: rotate(35deg) skewX(45deg) scaleY(cos(45deg));
+  }
+  .center {
+    transform: rotate(-20deg) skewX(45deg) scaleY(cos(45deg));
+  }
+  
+  .tilt-left {
+    margin-left: -80px;
+    transform: rotate(100deg) skewX(45deg) scaleY(cos(45deg));
+  }
+
+  .purple {
+    background-color: purple;
+  }
