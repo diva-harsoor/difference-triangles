@@ -9,10 +9,14 @@ function Cell({ index, value, arrows, rowEnd, onClick }) {
     arrows && arrows.includes(1) ? 'tilt-left purple' : ''
   } ${arrows && arrows.includes(-1) ? 'tilt-right purple' : ''}`;
 
+  let buttonClassName = `circle ${typeof value == "object" ? "scratch" : ""}`;
+
   return (
     <div key={index} className="cell-container">
       <div className="cell-row">
-        <button className="circle" onClick={() => onClick(index)}>{value}</button>
+        <button className={buttonClassName} onClick={() => onClick(index)}>
+          {value}
+        </button>
         {!rowEnd && <div className={sideClassName}></div>}
       </div>
       <div className={belowClassName}></div>
@@ -31,6 +35,8 @@ export default function Board() {
   const [cellArrows, setCellArrows] = useState([]);
   const [clueCells, setClueCells] = useState([]);
   const [cells, setCells] = useState([]);
+  const [scratchArrays, setScratchArrays] = useState([]);
+  const [scratch, setScratch] = useState(false);
   const [numbers, setNumbers] = useState([]);
   const [selectedNumber, setSelectedNumber] = useState(-1);
   
@@ -40,19 +46,17 @@ export default function Board() {
     const initialCellArrows = [[],[1],[],[1],[],[-1]];
     setCellArrows(initialCellArrows);
 
-    const populateCells = () => {
+    const initializeCells = () => {
       let tempCells = Array(length).fill(null);
       tempCells[0] = 2;
-      /*
-      let tempCells = [];
-      let length = (n_rows * (n_rows + 1))/2;
-      for (let i = 0; i < length; i++) {
-        tempCells.push(i);
-      }
-      */
       setCells(tempCells);
       setClueCells(tempCells);
     };
+
+    const initializeScratchArrays = () => {
+      let tempScratchArrays = Array(length).fill(null).map(() => Array(length).fill(null));
+      setScratchArrays(tempScratchArrays);
+    }
 
     const populateNumbers = () => {
       let tempNumbers = [];
@@ -62,29 +66,47 @@ export default function Board() {
       setNumbers(tempNumbers);
     };
 
-    populateCells();
+    initializeCells();
+    initializeScratchArrays();
     populateNumbers();
   }, []);
 
   function handleCellClick(i) {
     if (!clueCells[i]) {
-      if (selectedNumber != -1) {
-        const tempCells = cells.slice();
-        tempCells[i] = selectedNumber;
-        setCells(tempCells);
+      if (scratch && (selectedNumber != -1)) {
+        let tempScratchArrays = scratchArrays.map(innerArr => [...innerArr]);
+        if (scratchArrays[i].includes(`${selectedNumber},`)) {
+          tempScratchArrays[i] = tempScratchArrays[i].filter(num => num !== `${selectedNumber},`);
+        }
+        else {
+          tempScratchArrays[i].push(`${selectedNumber},`);
+        }
+        setScratchArrays(tempScratchArrays);
         setSelectedNumber(-1);
       }
+      else {
+        if (selectedNumber != -1) {
+          const tempCells = cells.slice();
+          tempCells[i] = selectedNumber;
+          setCells(tempCells);
+          setSelectedNumber(-1);
+        }
 
-      else if (cells[i]) {
-        const tempCells = cells.slice();
-        tempCells[i] = null;
-        setCells(tempCells);
+        else if (cells[i]) {
+          const tempCells = cells.slice();
+          tempCells[i] = null;
+          setCells(tempCells);
+        }
       }
     }
   }
 
   function handleNumClick(i) {
     setSelectedNumber(i+1);
+  }
+
+  function handleScratchClick() {
+    setScratch(!scratch);
   }
 
   const renderCells = () => {
@@ -96,12 +118,14 @@ export default function Board() {
       for (let col_i = row_i - 1; col_i >= 0; col_i--) {
         cell_index--;
         const handleEachCellClick = (index) => () => handleCellClick(index);
+        let value = cells[cell_index] ? cells[cell_index] : scratchArrays[cell_index];
         rowCells.push(
           <Cell 
             key={`cell-${cell_index}`}
-            value={cells[cell_index]}
+            value={value}
             arrows={cellArrows[cell_index]}
             rowEnd={col_i == 0}
+            scratch={scratch}
             onClick={handleEachCellClick(cell_index)}
           />
         );
@@ -164,18 +188,17 @@ export default function Board() {
     return bank;
   }
 
-  /*
-  let status = "You can do it!";
-  if (checkSuccess(cells, 3)) {
-    status = "Congrats! You got it!";
-  }
-  */
-
   return (
     <>
+      <div>Complete the difference triangle such that: 
+        <ul>Each cell is the difference of the two above it.</ul>
+        <ul>A diamond between two cells denotes a difference of 1.</ul>
+        <ul>Each number is used exactly once.</ul>
+      </div>
       <div className="centered-row">{checkSuccess(cells,3)}</div>
       {renderCells()}
       {renderNumberBank()}
+      <button onClick={handleScratchClick}>{scratch ? "Disable scratch" : "Enable scratch"}</button>
     </>
   );
 }

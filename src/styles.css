@@ -155,3 +155,8 @@
   .purple {
     background-color: purple;
   }
+
+  .scratch {
+    color: gray;
+    font-size: 12px;
+  }
