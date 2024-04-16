@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 
 // Circle with arrows
+// Arrows are right-to-left, top-to-bottom
 function Cell({ index, value, arrows, onClick }) {
   const sideClassName = `rhombus center ${arrows && arrows.includes(0) ? 'purple' : ''}`;
 
@@ -33,20 +34,24 @@ export default function Board() {
   
   useEffect(() => {
     // cells, cellArrow will eventually come from question set (db)
-    const initialCellArrows = [[],[1],[0],[],[0],[0,-1]];
+    const initialCellArrows = [[],[1],[],[1],[],[-1]];
     setCellArrows(initialCellArrows);
 
     const populateCells = (n_rows=3) => {
+      let length = (n_rows * (n_rows + 1))/2;
+      let tempCells = Array(length).fill(null);
+      tempCells[0] = 2;
+      /*
       let tempCells = [];
       let length = (n_rows * (n_rows + 1))/2;
       for (let i = 0; i < length; i++) {
         tempCells.push(i);
       }
+      */
       setCells(tempCells);
     };
 
     const populateNumbers = (n_rows=3) => {
-      console.log("populating numbers");
       let tempNumbers = [];
       let length = (n_rows * (n_rows + 1))/2;
       for (let i = 1; i <= length; i++) {
@@ -107,7 +112,6 @@ export default function Board() {
       return [];
     }
     else {
-      console.log(numbers.length);
     }
     let halflength = Math.floor(numbers.length/2);
     let factor_short = halflength;
@@ -115,20 +119,16 @@ export default function Board() {
     for (let i = 2; i < halflength; i++) {
       let factor = numbers.length/i;
       if ((factor % 1) == 0) {
-        console.log(`factor: ${factor}`);
         let complement = numbers.length/factor;
         if (Math.abs(complement - factor) < min_diff) {
-          console.log(`entered conditional`)
           min_diff = Math.abs(complement - factor);
           factor_short = factor < complement ? factor : complement;
         }
       }
     }
-    console.log(`factor-short: `, factor_short);
 
     let bank = [];
     let factor_long = numbers.length/factor_short;
-    console.log(`factors: ${factor_long}, ${factor_short}`)
     let counter = 0;
     for (let row_i=0; row_i<factor_short; row_i++) {
       const rowNums = [];
@@ -154,14 +154,16 @@ export default function Board() {
     return bank;
   }
 
+  /*
   let status = "You can do it!";
   if (checkSuccess(cells, 3)) {
     status = "Congrats! You got it!";
   }
+  */
 
   return (
     <>
-      <div className="centered-row">{status}</div>
+      <div className="centered-row">{checkSuccess(cells,3)}</div>
       {renderCells()}
       {renderNumberBank()}
     </>
@@ -169,18 +171,27 @@ export default function Board() {
 }
 
 function checkSuccess(cells, n_rows) {
+  let cells_freq = Array(cells.length).fill(0);
+  for (let i = 0; i < cells.length; i++) {
+    if (cells[i]) {
+      cells_freq[cells[i]]++;
+      if (cells_freq[cells[i]] > 1) {
+        return "Uh-oh, you have a duplicate.";
+      } 
+    }
+  }
   let diff_i = 0; // index of difference
   let subt_i = 1; // index of subtrahend
   for (let row_i=1; row_i<=n_rows-1; row_i++) {
     for (let col_i=row_i; col_i>0; col_i--) {
       // check difference in each sub-triangle
       if (Math.abs(cells[subt_i + 1] - cells[subt_i]) != cells[diff_i]) {
-        return false;
+        return "You can do it!";
       }
       diff_i++;
       subt_i++;
     }
     subt_i++;
   }
-  return true;
+  return "Congrats! You got it!";
 }
