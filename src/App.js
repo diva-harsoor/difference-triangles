@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 
 // Circle with arrows
 // Arrows are right-to-left, top-to-bottom
-function Cell({ index, value, arrows, onClick }) {
+function Cell({ index, value, arrows, rowEnd, onClick }) {
   const sideClassName = `rhombus center ${arrows && arrows.includes(0) ? 'purple' : ''}`;
 
   const belowClassName = `rhombus ${
@@ -13,7 +13,7 @@ function Cell({ index, value, arrows, onClick }) {
     <div key={index} className="cell-container">
       <div className="cell-row">
         <button className="circle" onClick={() => onClick(index)}>{value}</button>
-        <div className={sideClassName}></div>
+        {!rowEnd && <div className={sideClassName}></div>}
       </div>
       <div className={belowClassName}></div>
     </div>
@@ -27,18 +27,20 @@ function Number({ index, value, onClick }) {
 }
 
 export default function Board() {
+  const [numRows, setNumRows] = useState(3);
   const [cellArrows, setCellArrows] = useState([]);
+  const [clueCells, setClueCells] = useState([]);
   const [cells, setCells] = useState([]);
   const [numbers, setNumbers] = useState([]);
   const [selectedNumber, setSelectedNumber] = useState(-1);
   
   useEffect(() => {
+    let length = (numRows * (numRows + 1))/2;
     // cells, cellArrow will eventually come from question set (db)
     const initialCellArrows = [[],[1],[],[1],[],[-1]];
     setCellArrows(initialCellArrows);
 
-    const populateCells = (n_rows=3) => {
-      let length = (n_rows * (n_rows + 1))/2;
+    const populateCells = () => {
       let tempCells = Array(length).fill(null);
       tempCells[0] = 2;
       /*
@@ -49,11 +51,11 @@ export default function Board() {
       }
       */
       setCells(tempCells);
+      setClueCells(tempCells);
     };
 
-    const populateNumbers = (n_rows=3) => {
+    const populateNumbers = () => {
       let tempNumbers = [];
-      let length = (n_rows * (n_rows + 1))/2;
       for (let i = 1; i <= length; i++) {
         tempNumbers.push(i);
       }
@@ -65,11 +67,19 @@ export default function Board() {
   }, []);
 
   function handleCellClick(i) {
-    if (selectedNumber != -1) {
-      const tempCells = cells.slice();
-      tempCells[i] = selectedNumber;
-      setCells(tempCells);
-      setSelectedNumber(-1);
+    if (!clueCells[i]) {
+      if (selectedNumber != -1) {
+        const tempCells = cells.slice();
+        tempCells[i] = selectedNumber;
+        setCells(tempCells);
+        setSelectedNumber(-1);
+      }
+
+      else if (cells[i]) {
+        const tempCells = cells.slice();
+        tempCells[i] = null;
+        setCells(tempCells);
+      }
     }
   }
 
@@ -77,13 +87,12 @@ export default function Board() {
     setSelectedNumber(i+1);
   }
 
-  const renderCells = (n_rows=3) => {
+  const renderCells = () => {
     let board = [];
-    let length = (n_rows * (n_rows + 1))/2;
-    let cell_index = length;
-    for (let row_i = n_rows; row_i > 0; row_i--) {
+    let cell_index = cells.length;
+    for (let row_i = numRows; row_i > 0; row_i--) {
       const rowCells = [];
-      const leftPadding = Array(n_rows - row_i).fill(null);
+      const leftPadding = Array(numRows - row_i).fill(null);
       for (let col_i = row_i - 1; col_i >= 0; col_i--) {
         cell_index--;
         const handleEachCellClick = (index) => () => handleCellClick(index);
@@ -92,6 +101,7 @@ export default function Board() {
             key={`cell-${cell_index}`}
             value={cells[cell_index]}
             arrows={cellArrows[cell_index]}
+            rowEnd={col_i == 0}
             onClick={handleEachCellClick(cell_index)}
           />
         );
