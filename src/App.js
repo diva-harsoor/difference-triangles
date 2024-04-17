@@ -184,7 +184,7 @@ function Keypad({ status, numbers, scratch, onNumPress, onScratchPress }) {
       bank.push(numberRows);
     }
     bank.push(
-      <button key={`scratch`} className="keypad-button" onClick={handleScratchClick}>
+      <button key={`scratch`} className="keypad-button scratch" onClick={handleScratchClick}>
         {scratch ? "Disable scratch" : "Enable scratch"}
       </button>
     );
@@ -210,12 +210,24 @@ export default function Game() {
   useEffect(() => {
     let length = (numRows * (numRows + 1))/2;
     // cells, cellArrow will eventually come from question set (db)
-    const initialCellArrows = [[],[1],[],[1],[],[-1]];
+    let initialCellArrows = [];
+    if (numRows == 3) {
+      initialCellArrows = [[],[1],[],[1],[],[-1]];
+    }
+    else if (numRows == 4) {
+      initialCellArrows = [[],[1],[],[],[],[-1],[1],[],[-1],[]];
+    }
     setCellArrows(initialCellArrows);
 
     const initializeCells = () => {
       let tempCells = Array(length).fill(null);
-      tempCells[0] = 2;
+      if (numRows == 3) {
+        tempCells[0] = 2;
+      }
+      else if (numRows == 4) {
+        tempCells[0] = 3;
+        tempCells[2] = 5;
+      }
       setCells(tempCells);
       setClueCells(tempCells);
     };
@@ -237,7 +249,7 @@ export default function Game() {
     initializeScratchArrays();
     populateNumbers();
     setScratch(false);
-  }, []);
+  }, [numRows]);
 
   function handlePlay(nextCells, nextSelectedNumber, nextScratchArrays)  {
     setCells(nextCells);
@@ -251,6 +263,10 @@ export default function Game() {
 
   function handleScratchPress(nextScratch) {
     setScratch(nextScratch);
+  }
+
+  if (checkSuccess(cells, numRows) == "Congrats! You got it!") {
+    setNumRows(numRows + 1);
   }
 
   return (

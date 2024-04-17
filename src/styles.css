@@ -190,5 +190,9 @@
     flex: 1;
     margin-left: 20px;
   }
-  
+
+  .scratch {
+    color: gray;
+    font-size: 12px;
+  }  
   
