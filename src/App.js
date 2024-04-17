@@ -26,7 +26,7 @@ function Cell({ index, value, arrows, rowEnd, onClick }) {
 
 function Number({ index, value, onClick }) {
   return(
-    <button key={index} className="number-button" onClick={() => onClick(index)}>{value}</button>
+    <button key={index} className="keypad-button" onClick={() => onClick(index)}>{value}</button>
   );
 }
 
@@ -116,7 +116,7 @@ function checkSuccess(cells, n_rows) {
     for (let col_i=row_i; col_i>0; col_i--) {
       // check difference in each sub-triangle
       if (Math.abs(cells[subt_i + 1] - cells[subt_i]) != cells[diff_i]) {
-        return "You can do it!";
+        return "";
       }
       diff_i++;
       subt_i++;
@@ -126,7 +126,7 @@ function checkSuccess(cells, n_rows) {
   return "Congrats! You got it!";
 }
 
-function Keypad({ numbers, scratch, onNumPress, onScratchPress }) {
+function Keypad({ status, numbers, scratch, onNumPress, onScratchPress }) {
   function handleNumClick(i) {
     onNumPress(i+1);
   }
@@ -136,7 +136,6 @@ function Keypad({ numbers, scratch, onNumPress, onScratchPress }) {
   }
 
   const renderNumberBank = () => {
-    console.log(`numbers.length: ${numbers.length}`);
     if (numbers.length == 0) {
       console.log("hit numbers.length == 0");
       return [];
@@ -156,11 +155,16 @@ function Keypad({ numbers, scratch, onNumPress, onScratchPress }) {
     }
 
     let bank = [];
+    if (status) {
+      bank.push(
+        <button key={`status`} className="keypad-button">{status}</button>
+      );
+    }
     let factor_long = numbers.length/factor_short;
     let counter = 0;
-    for (let row_i=0; row_i<factor_short; row_i++) {
+    for (let row_i=0; row_i<factor_long; row_i++) {
       const rowNums = [];
-      for (let col_i=0; col_i<factor_long; col_i++) {
+      for (let col_i=0; col_i<factor_short; col_i++) {
         const handleEachNumClick = (index) => () => handleNumClick(index);
         rowNums.push(
           <Number
@@ -180,7 +184,7 @@ function Keypad({ numbers, scratch, onNumPress, onScratchPress }) {
       bank.push(numberRows);
     }
     bank.push(
-      <button key={`scratch`} className="scratch-button" onClick={handleScratchClick}>
+      <button key={`scratch`} className="keypad-button" onClick={handleScratchClick}>
         {scratch ? "Disable scratch" : "Enable scratch"}
       </button>
     );
@@ -251,16 +255,39 @@ export default function Game() {
 
   return (
     <>
-      <div>Complete the difference triangle such that: 
-        <ul>Each cell is the difference of the two above it.</ul>
-        <ul>A diamond between two cells denotes a difference of 1.</ul>
-        <ul>Each number is used exactly once.</ul>
+    <h1 className="centered-row">Can you solve the difference triangle?</h1>
+    <div className="game-container">
+      <div className="instructions">
+        Complete the difference triangle such that:
+        <ul>
+          <li>Each cell is the difference of the two above it.</li>
+          <li>A diamond between two cells denotes a difference of 1.</li>
+          <li>Each number is used exactly once.</li>
+        </ul>
       </div>
-      <div className="centered-row">{checkSuccess(cells,3)}</div>
-      <div>
-        <Board numRows={numRows} cells={cells} clueCells={clueCells} cellArrows={cellArrows} selectedNumber={selectedNumber} scratchArrays={scratchArrays} scratch={scratch} onPlay={handlePlay} />
+      <div className="game-board">
+        <div className="centered-row">{checkSuccess(cells, numRows)}</div>
+        <Board
+          numRows={numRows}
+          cells={cells}
+          clueCells={clueCells}
+          cellArrows={cellArrows}
+          selectedNumber={selectedNumber}
+          scratchArrays={scratchArrays}
+          scratch={scratch}
+          onPlay={handlePlay}
+        />
       </div>
-      <Keypad numbers={numbers} scratch={scratch} onNumPress={handleNumPress} onScratchPress={handleScratchPress}/>
+      <div className="keypad">
+        <Keypad
+          status={checkSuccess(cells, numRows)}
+          numbers={numbers}
+          scratch={scratch}
+          onNumPress={handleNumPress}
+          onScratchPress={handleScratchPress}
+        />
+      </div>
+    </div>
     </>
   );
 }

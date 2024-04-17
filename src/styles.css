@@ -6,7 +6,6 @@
   body {
     font-family: sans-serif;
     margin: 20px;
-    padding: 0;
   }
   
   h1 {
@@ -140,7 +139,7 @@
   }
   
   .tilt-right {
-    margin-left: 20px;
+    margin-left: 30px;
     transform: rotate(35deg) skewX(45deg) scaleY(cos(45deg));
   }
   .center {
@@ -148,7 +147,7 @@
   }
   
   .tilt-left {
-    margin-left: -80px;
+    margin-left: -50px;
     transform: rotate(100deg) skewX(45deg) scaleY(cos(45deg));
   }
 
@@ -156,7 +155,7 @@
     background-color: purple;
   }
 
-  .scratch-button {
+  .keypad-button {
     display: block;
     margin: 10px auto;
     padding: 8px 16px;
@@ -167,7 +166,29 @@
     cursor: pointer;
   }
   
-  .scratch-button:hover {
+  .keypad-button:hover {
     background-color: #e0e0e0;
   }
+
+  .game-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 50px 200px;
+  }
+  
+  .instructions {
+    flex: 1;
+    margin-right: 20px;
+  }
+  
+  .game-board {
+    flex: 2;
+  }
+  
+  .keypad {
+    flex: 1;
+    margin-left: 20px;
+  }
+  
   
