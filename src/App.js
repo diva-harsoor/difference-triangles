@@ -30,84 +30,35 @@ function Number({ index, value, onClick }) {
   );
 }
 
-export default function Board() {
-  const [numRows, setNumRows] = useState(3);
-  const [cellArrows, setCellArrows] = useState([]);
-  const [clueCells, setClueCells] = useState([]);
-  const [cells, setCells] = useState([]);
-  const [scratchArrays, setScratchArrays] = useState([]);
-  const [scratch, setScratch] = useState(false);
-  const [numbers, setNumbers] = useState([]);
-  const [selectedNumber, setSelectedNumber] = useState(-1);
-  
-  useEffect(() => {
-    let length = (numRows * (numRows + 1))/2;
-    // cells, cellArrow will eventually come from question set (db)
-    const initialCellArrows = [[],[1],[],[1],[],[-1]];
-    setCellArrows(initialCellArrows);
-
-    const initializeCells = () => {
-      let tempCells = Array(length).fill(null);
-      tempCells[0] = 2;
-      setCells(tempCells);
-      setClueCells(tempCells);
-    };
-
-    const initializeScratchArrays = () => {
-      let tempScratchArrays = Array(length).fill(null).map(() => Array(length).fill(null));
-      setScratchArrays(tempScratchArrays);
-    }
-
-    const populateNumbers = () => {
-      let tempNumbers = [];
-      for (let i = 1; i <= length; i++) {
-        tempNumbers.push(i);
-      }
-      setNumbers(tempNumbers);
-    };
-
-    initializeCells();
-    initializeScratchArrays();
-    populateNumbers();
-  }, []);
-
+function Board({numRows, cells, clueCells, cellArrows, selectedNumber, scratchArrays, scratch, onPlay}) {
   function handleCellClick(i) {
+    let tempCells = cells.slice();
+    let tempSelectedNumber = selectedNumber;
+    let tempScratchArrays = scratchArrays.map(innerArr => [...innerArr]);
     if (!clueCells[i]) {
       if (scratch && (selectedNumber != -1)) {
-        let tempScratchArrays = scratchArrays.map(innerArr => [...innerArr]);
         if (scratchArrays[i].includes(`${selectedNumber},`)) {
           tempScratchArrays[i] = tempScratchArrays[i].filter(num => num !== `${selectedNumber},`);
         }
         else {
           tempScratchArrays[i].push(`${selectedNumber},`);
         }
-        setScratchArrays(tempScratchArrays);
-        setSelectedNumber(-1);
+        tempSelectedNumber = -1;
       }
       else {
         if (selectedNumber != -1) {
-          const tempCells = cells.slice();
           tempCells[i] = selectedNumber;
-          setCells(tempCells);
-          setSelectedNumber(-1);
+          tempSelectedNumber = -1;
         }
 
         else if (cells[i]) {
-          const tempCells = cells.slice();
           tempCells[i] = null;
-          setCells(tempCells);
         }
       }
     }
+    onPlay(tempCells, tempSelectedNumber, tempScratchArrays)
   }
 
-  function handleNumClick(i) {
-    setSelectedNumber(i+1);
-  }
-
-  function handleScratchClick() {
-    setScratch(!scratch);
-  }
 
   const renderCells = () => {
     let board = [];
@@ -140,6 +91,100 @@ export default function Board() {
     }
     return board;
   };
+
+
+  return (
+    <>
+      {renderCells()}
+    </>
+  );
+}
+
+function checkSuccess(cells, n_rows) {
+  let cells_freq = Array(cells.length).fill(0);
+  for (let i = 0; i < cells.length; i++) {
+    if (cells[i]) {
+      cells_freq[cells[i]]++;
+      if (cells_freq[cells[i]] > 1) {
+        return "Uh-oh, you have a duplicate.";
+      } 
+    }
+  }
+  let diff_i = 0; // index of difference
+  let subt_i = 1; // index of subtrahend
+  for (let row_i=1; row_i<=n_rows-1; row_i++) {
+    for (let col_i=row_i; col_i>0; col_i--) {
+      // check difference in each sub-triangle
+      if (Math.abs(cells[subt_i + 1] - cells[subt_i]) != cells[diff_i]) {
+        return "You can do it!";
+      }
+      diff_i++;
+      subt_i++;
+    }
+    subt_i++;
+  }
+  return "Congrats! You got it!";
+}
+
+function NumberBank() {
+  
+}
+
+export default function Game() {
+  const [numRows, setNumRows] = useState(3);
+  const [cellArrows, setCellArrows] = useState([]);
+  const [clueCells, setClueCells] = useState([]);
+  const [cells, setCells] = useState([]);
+  const [scratchArrays, setScratchArrays] = useState([]);
+  const [scratch, setScratch] = useState(false); // move
+  const [numbers, setNumbers] = useState([]); // move
+  const [selectedNumber, setSelectedNumber] = useState(-1); // move?
+
+  useEffect(() => {
+    let length = (numRows * (numRows + 1))/2;
+    // cells, cellArrow will eventually come from question set (db)
+    const initialCellArrows = [[],[1],[],[1],[],[-1]];
+    setCellArrows(initialCellArrows);
+
+    const initializeCells = () => {
+      let tempCells = Array(length).fill(null);
+      tempCells[0] = 2;
+      setCells(tempCells);
+      setClueCells(tempCells);
+    };
+
+    const initializeScratchArrays = () => {
+      let tempScratchArrays = Array(length).fill(null).map(() => Array(length).fill(null));
+      setScratchArrays(tempScratchArrays);
+    }
+
+    const populateNumbers = () => {
+      let tempNumbers = [];
+      for (let i = 1; i <= length; i++) {
+        tempNumbers.push(i);
+      }
+      setNumbers(tempNumbers);
+    };
+
+    initializeCells();
+    initializeScratchArrays();
+    populateNumbers();
+    setScratch(false);
+  }, []);
+
+  function handlePlay(nextCells, nextSelectedNumber, nextScratchArrays)  {
+    setCells(nextCells);
+    setSelectedNumber(nextSelectedNumber);
+    setScratchArrays(nextScratchArrays);
+  }
+
+  function handleNumClick(i) {
+    setSelectedNumber(i+1);
+  }
+
+  function handleScratchClick() {
+    setScratch(!scratch);
+  }
 
   const renderNumberBank = () => {
     if (numbers.length == 0) {
@@ -196,35 +241,11 @@ export default function Board() {
         <ul>Each number is used exactly once.</ul>
       </div>
       <div className="centered-row">{checkSuccess(cells,3)}</div>
-      {renderCells()}
+      <div>
+        <Board numRows={numRows} cells={cells} clueCells={clueCells} cellArrows={cellArrows} selectedNumber={selectedNumber} scratchArrays={scratchArrays} scratch={scratch} onPlay={handlePlay} />
+      </div>
       {renderNumberBank()}
       <button onClick={handleScratchClick}>{scratch ? "Disable scratch" : "Enable scratch"}</button>
     </>
   );
-}
-
-function checkSuccess(cells, n_rows) {
-  let cells_freq = Array(cells.length).fill(0);
-  for (let i = 0; i < cells.length; i++) {
-    if (cells[i]) {
-      cells_freq[cells[i]]++;
-      if (cells_freq[cells[i]] > 1) {
-        return "Uh-oh, you have a duplicate.";
-      } 
-    }
-  }
-  let diff_i = 0; // index of difference
-  let subt_i = 1; // index of subtrahend
-  for (let row_i=1; row_i<=n_rows-1; row_i++) {
-    for (let col_i=row_i; col_i>0; col_i--) {
-      // check difference in each sub-triangle
-      if (Math.abs(cells[subt_i + 1] - cells[subt_i]) != cells[diff_i]) {
-        return "You can do it!";
-      }
-      diff_i++;
-      subt_i++;
-    }
-    subt_i++;
-  }
-  return "Congrats! You got it!";
 }
