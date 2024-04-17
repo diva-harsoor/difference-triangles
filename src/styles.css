@@ -156,7 +156,18 @@
     background-color: purple;
   }
 
-  .scratch {
-    color: gray;
-    font-size: 12px;
+  .scratch-button {
+    display: block;
+    margin: 10px auto;
+    padding: 8px 16px;
+    font-size: 16px;
+    background-color: #f0f0f0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
   }
+  
+  .scratch-button:hover {
+    background-color: #e0e0e0;
+  }
+  
