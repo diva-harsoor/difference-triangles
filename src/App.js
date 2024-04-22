@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 
 // Circle with arrows
 // Arrows are right-to-left, top-to-bottom
-function Cell({ index, value, arrows, rowEnd, onClick }) {
+function Cell({ index, value, arrows, rowEnd, onClick, style }) {
   const sideClassName = `rhombus center ${arrows && arrows.includes(0) ? 'purple' : ''}`;
 
   const belowClassName = `rhombus ${
@@ -14,7 +14,7 @@ function Cell({ index, value, arrows, rowEnd, onClick }) {
   return (
     <div key={index} className="cell-container">
       <div className="cell-row">
-        <button className={buttonClassName} onClick={() => onClick(index)}>
+        <button className={buttonClassName} onClick={() => onClick(index)} style={style}>
           {value}
         </button>
         {!rowEnd && <div className={sideClassName}></div>}
@@ -31,6 +31,15 @@ function Number({ index, value, onClick }) {
 }
 
 function Board({numRows, cells, clueCells, cellArrows, selectedNumber, scratchArrays, scratch, onPlay}) {
+
+  const circleSize = `${400 / numRows}px`;
+  const fontSize = `${24 * (3 / numRows)}px`; // Adjust the multiplier as needed
+  const circleStyle = {
+    width: circleSize,
+    height: circleSize,
+    fontSize: fontSize,
+  };
+    
   function handleCellClick(i) {
     let tempCells = cells.slice();
     let tempSelectedNumber = selectedNumber;
@@ -78,6 +87,7 @@ function Board({numRows, cells, clueCells, cellArrows, selectedNumber, scratchAr
             rowEnd={col_i == 0}
             scratch={scratch}
             onClick={handleEachCellClick(cell_index)}
+            style={circleStyle}
           />
         );
       }
@@ -94,11 +104,11 @@ function Board({numRows, cells, clueCells, cellArrows, selectedNumber, scratchAr
 
 
   return (
-    <>
+    <div className="board-container">
       {renderCells()}
-    </>
+    </div>
   );
-}
+  }
 
 function checkSuccess(cells, n_rows) {
   let cells_freq = Array(cells.length).fill(0);

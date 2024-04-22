@@ -57,50 +57,22 @@
   }
 
   .circle {
-    height: 100px;
-    width: 100px;
     background-color: #fff;
     border-radius: 50%;
-    font-size: 24px;
     font-weight: bold;
     border: 1px solid #999;
   }
-  
-  .square {
-    background: #fff;
-    border: 1px solid #999;
-    float: left;
-    font-size: 24px;
-    font-weight: bold;
-    line-height: 34px;
-    height: 34px;
-    margin-right: -1px;
-    margin-top: -1px;
-    padding: 0;
-    text-align: center;
-    width: 34px;
-  }
 
-  .coldot {
-    margin-top: 12px;
-    margin-bottom: 12px;
-    width: 10px;
-    height: 10px;
-    background-color: purple;
-    border-radius: 50%;
-    display: inline-block;
-  }
-  
-  .rowdot {
-    margin-left: 12px;
-    margin-right: 12px;
-    width: 10px;
-    height: 10px;
-    background-color: purple;
-    border-radius: 50%;
-    display: inline-block;
-  }
-
+  .board-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 600px; /* Adjust the width as needed */
+    height: 600px; /* Adjust the height as needed */
+    margin: 0 auto;
+  }  
+    
   .board-row {
     display: flex;
     flex-direction: row;
@@ -121,8 +93,9 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin: 5px; /* Adjust the margin as needed */
   }
-  
+    
   .cell-row {
     display: flex;
     align-items: center;
@@ -133,11 +106,12 @@
   }
 
   .rhombus {
-    margin: 10px 10px 0px 10px;
-    width: 20px;
-    height: 20px;
+    margin: 5px; /* Adjust the margin as needed */
+    width: 10px; /* Adjust the width as needed */
+    height: 10px; /* Adjust the height as needed */
+    transform: scale(0.8); /* Adjust the scale factor as needed */
   }
-  
+    
   .tilt-right {
     margin-left: 30px;
     transform: rotate(35deg) skewX(45deg) scaleY(cos(45deg));
@@ -159,13 +133,13 @@
     display: block;
     margin: 10px auto;
     padding: 8px 16px;
-    font-size: 16px;
+    font-size: 1em; /* Adjust the font size as needed */
     background-color: #f0f0f0;
     border: none;
     border-radius: 4px;
     cursor: pointer;
   }
-  
+    
   .keypad-button:hover {
     background-color: #e0e0e0;
   }
@@ -193,6 +167,6 @@
 
   .scratch {
     color: gray;
-    font-size: 12px;
-  }  
+    font-size: 0.6em; /* Adjust the font size as needed */
+  }
   
