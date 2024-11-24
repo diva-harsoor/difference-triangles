@@ -80,6 +80,16 @@
     justify-content: 'center';
   }
 
+  .info {
+    display: flex;
+    flex-direction: column; 
+    align-items: center;
+  }
+
+  .info ul {
+    text-align: left; 
+  }
+
   .centered-row {
     display: flex;
     justify-content: center;
@@ -117,11 +127,12 @@
     transform: rotate(35deg) skewX(45deg) scaleY(cos(45deg));
   }
   .center {
+    margin-left: 20px; /* Center horizontally */
     transform: rotate(-20deg) skewX(45deg) scaleY(cos(45deg));
   }
   
   .tilt-left {
-    margin-left: -50px;
+    margin-left: -70px;
     transform: rotate(100deg) skewX(45deg) scaleY(cos(45deg));
   }
 

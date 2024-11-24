@@ -2,12 +2,14 @@ import { useState, useEffect } from 'react';
 
 // Circle with arrows
 // Arrows are right-to-left, top-to-bottom
-function Cell({ index, value, arrows, rowEnd, onClick, style }) {
-  const sideClassName = `rhombus center ${arrows && arrows.includes(0) ? 'purple' : ''}`;
+function Cell({ index, value, arrow, rowEnd, onClick, style }) {
+  // arrows that go between two cells in the same row
+  const sideClassName = `rhombus center ${(arrow == 0) ? 'purple' : ''}`;
 
+  // arrows that go from a cell in one row to a cell in a different row
   const belowClassName = `rhombus ${
-    arrows && arrows.includes(1) ? 'tilt-left purple' : ''
-  } ${arrows && arrows.includes(-1) ? 'tilt-right purple' : ''}`;
+    (arrow == 1) ? 'tilt-left purple' : ''
+  } ${(arrow == -1) ? 'tilt-right purple' : ''}`;
 
   let buttonClassName = `circle ${typeof value == "object" ? "scratch" : ""}`;
 
@@ -70,6 +72,9 @@ function Board({numRows, cells, clueCells, cellArrows, selectedNumber, scratchAr
 
 
   const renderCells = () => {
+    for (const [key, value] of cellArrows) {
+      console.log(`Key:`, key, `Type of key:`, typeof key, `Value:`, value);
+    }
     let board = [];
     let cell_index = cells.length;
     for (let row_i = numRows; row_i > 0; row_i--) {
@@ -83,7 +88,7 @@ function Board({numRows, cells, clueCells, cellArrows, selectedNumber, scratchAr
           <Cell 
             key={`cell-${cell_index}`}
             value={value}
-            arrows={cellArrows[cell_index]}
+            arrow={cellArrows.has(cell_index) ? cellArrows.get(cell_index) : 2}
             rowEnd={col_i == 0}
             scratch={scratch}
             onClick={handleEachCellClick(cell_index)}
@@ -133,6 +138,9 @@ function checkSuccess(cells, n_rows) {
     }
     subt_i++;
   }
+  if (n_rows === 5) {
+    return "Congrats! You won the game!";
+  }
   return "Congrats! You got it!";
 }
 
@@ -147,7 +155,6 @@ function Keypad({ status, numbers, scratch, onNumPress, onScratchPress }) {
 
   const renderNumberBank = () => {
     if (numbers.length == 0) {
-      console.log("hit numbers.length == 0");
       return [];
     }
     let halflength = Math.floor(numbers.length/2);
@@ -209,34 +216,60 @@ function Keypad({ status, numbers, scratch, onNumPress, onScratchPress }) {
 
 export default function Game() {
   const [numRows, setNumRows] = useState(3);
-  const [cellArrows, setCellArrows] = useState([]);
+  const [cellArrows, setCellArrows] = useState(new Map());
+  // const [cellArrows, setCellArrows] = useState([]);
   const [clueCells, setClueCells] = useState([]);
   const [cells, setCells] = useState([]);
   const [scratchArrays, setScratchArrays] = useState([]);
   const [scratch, setScratch] = useState(false); // move
   const [numbers, setNumbers] = useState([]); // move
   const [selectedNumber, setSelectedNumber] = useState(-1); // move?
+  const [hasWon, setHasWon] = useState(false);
 
   useEffect(() => {
     let length = (numRows * (numRows + 1))/2;
-    // cells, cellArrow will eventually come from question set (db)
-    let initialCellArrows = [];
+    // cells, cellArrow could come from a db but there's just not very many possible
     if (numRows == 3) {
-      initialCellArrows = [[],[1],[],[1],[],[-1]];
+      const map = new Map([
+        [1, 1],
+        [3, 1],
+        [5, -1],
+      ]);
+      setCellArrows(map)
     }
     else if (numRows == 4) {
-      initialCellArrows = [[],[1],[],[],[],[-1],[1],[],[-1],[]];
+      const map = new Map([
+        [1,1],
+        [5,-1],
+        [6,1],
+        [8,-1],
+      ]);
+      setCellArrows(map)
     }
-    setCellArrows(initialCellArrows);
+    else if (numRows == 5) {
+      const map = new Map([
+        [13,0],
+        [9,-1],
+        [7, 1],
+        [2,-1],
+      ])
+      setCellArrows(map);
+    }
+    // setCellArrows(initialCellArrows);
 
     const initializeCells = () => {
       let tempCells = Array(length).fill(null);
       if (numRows == 3) {
         tempCells[0] = 2;
       }
-      else if (numRows == 4) {
+      if (numRows == 4) {
         tempCells[0] = 3;
         tempCells[2] = 5;
+      }
+      if (numRows == 5) {
+        tempCells[0] = 5;
+        tempCells[4] = 11;
+        tempCells[13] = 14;
       }
       setCells(tempCells);
       setClueCells(tempCells);
@@ -275,24 +308,28 @@ export default function Game() {
     setScratch(nextScratch);
   }
 
-  if (checkSuccess(cells, numRows) == "Congrats! You got it!") {
+  if (checkSuccess(cells, numRows) == "Congrats! You got it!" && numRows < 5) {
     setNumRows(numRows + 1);
+  }
+
+  if (checkSuccess(cells, numRows) === "Congrats! You won the game!" && !hasWon) {
+    setHasWon(true);
   }
 
   return (
     <>
-    <h1 className="centered-row">Can you solve the difference triangle?</h1>
+    <div className="centered-row"><h1>Can you solve the difference triangle?</h1></div>
+    <div className="info">
+      Complete the difference triangle such that:
+      <ul>
+        <li>Each cell is the difference of the two above it.</li>
+        <li>A diamond between two cells denotes a difference of 1.</li>
+        <li>Each number is used exactly once.</li>
+      </ul>
+    </div>
     <div className="game-container">
-      <div className="instructions">
-        Complete the difference triangle such that:
-        <ul>
-          <li>Each cell is the difference of the two above it.</li>
-          <li>A diamond between two cells denotes a difference of 1.</li>
-          <li>Each number is used exactly once.</li>
-        </ul>
-      </div>
       <div className="game-board">
-        <div className="centered-row">{checkSuccess(cells, numRows)}</div>
+        <div className="centered-row">{hasWon ? "🎉 Congrats! You solved the difference triangle!" : checkSuccess(cells, numRows)}</div>
         <Board
           numRows={numRows}
           cells={cells}
