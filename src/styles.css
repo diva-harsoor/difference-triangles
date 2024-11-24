@@ -69,7 +69,7 @@
     justify-content: center;
     align-items: center;
     width: 600px; /* Adjust the width as needed */
-    height: 600px; /* Adjust the height as needed */
+    height: 450px; /* Adjust the height as needed */
     margin: 0 auto;
   }  
     
@@ -82,17 +82,20 @@
 
   .info {
     display: flex;
-    flex-direction: column; 
-    align-items: center;
-  }
-
-  .info ul {
-    text-align: left; 
+    align-items: flex-start;
+    flex-direction: column;
+    height: auto;
+    width: 40%;
+    margin: auto;
+    text-align: left;
+    background: #CBC3E3;
+    padding: 16px;
   }
 
   .centered-row {
     display: flex;
     justify-content: center;
+    padding: 16px;
   }  
   
   .status {
@@ -116,7 +119,7 @@
   }
 
   .rhombus {
-    margin: 5px; /* Adjust the margin as needed */
+    margin: 0px; /* Adjust the margin as needed */
     width: 10px; /* Adjust the width as needed */
     height: 10px; /* Adjust the height as needed */
     transform: scale(0.8); /* Adjust the scale factor as needed */
@@ -142,7 +145,7 @@
 
   .keypad-button {
     display: block;
-    margin: 10px auto;
+    margin: 10px 10px;
     padding: 8px 16px;
     font-size: 1em; /* Adjust the font size as needed */
     background-color: #f0f0f0;
@@ -155,11 +158,19 @@
     background-color: #e0e0e0;
   }
 
+  .center-wrapper {
+    height: 100%;
+    margin: 0; /* Removes default margin */
+    display: flex; /* Enables flexbox on the page */
+    justify-content: center; /* Centers the .game-container horizontally */
+    align-items: center; /* Centers the .game-container vertically */
+  }
+
   .game-container {
     display: flex;
+    flex-direction: row;
     justify-content: space-between;
-    align-items: flex-start;
-    padding: 50px 200px;
+    width: 50%;
   }
   
   .instructions {
@@ -168,16 +179,19 @@
   }
   
   .game-board {
+    display: flex;
     flex: 2;
   }
   
   .keypad {
-    flex: 1;
-    margin-left: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    width: 40%;
   }
 
   .scratch {
     color: gray;
-    font-size: 0.6em; /* Adjust the font size as needed */
+    font-size: 0.8em; /* Adjust the font size as needed */
   }
   

@@ -34,7 +34,7 @@ function Number({ index, value, onClick }) {
 
 function Board({numRows, cells, clueCells, cellArrows, selectedNumber, scratchArrays, scratch, onPlay}) {
 
-  const circleSize = `${400 / numRows}px`;
+  const circleSize = `${300 / numRows}px`;
   const fontSize = `${24 * (3 / numRows)}px`; // Adjust the multiplier as needed
   const circleStyle = {
     width: circleSize,
@@ -318,18 +318,26 @@ export default function Game() {
 
   return (
     <>
-    <div className="centered-row"><h1>Can you solve the difference triangle?</h1></div>
-    <div className="info">
-      Complete the difference triangle such that:
-      <ul>
-        <li>Each cell is the difference of the two above it.</li>
-        <li>A diamond between two cells denotes a difference of 1.</li>
-        <li>Each number is used exactly once.</li>
-      </ul>
-    </div>
+    <div className="centered-row"><h1>Difference Triangle Game</h1></div>
+    <div className="centered-row">{hasWon ? "🎉 Congrats! You solved the difference triangle!" : checkSuccess(cells, numRows)}</div>
+    <div className="center-wrapper">
     <div className="game-container">
       <div className="game-board">
-        <div className="centered-row">{hasWon ? "🎉 Congrats! You solved the difference triangle!" : checkSuccess(cells, numRows)}</div>
+        <div className="info">
+          <h2>Instructions</h2>
+          Complete the difference triangle such that:
+          <ul>
+            <li>Each cell is the difference of the two above it.</li>
+            <li>A diamond between two cells denotes a difference of 1.</li>
+            <li>Each number is used exactly once.</li>
+          </ul>
+          To play: 
+          <ul>
+            <li>Click on a number and then click on the circle you want to place it in</li>
+            <li>Click on a circle to clear it</li>
+            <li>Click "Enable scratch" to add multiple numbers you are considering to a circle</li>
+          </ul>
+        </div>
         <Board
           numRows={numRows}
           cells={cells}
@@ -350,6 +358,7 @@ export default function Game() {
           onScratchPress={handleScratchPress}
         />
       </div>
+    </div>
     </div>
     </>
   );
