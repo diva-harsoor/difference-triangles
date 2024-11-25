@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/difference-triangles/static/css/main.6bdcb63e.css",
+    "main.js": "/difference-triangles/static/js/main.391eec94.js",
+    "index.html": "/difference-triangles/index.html",
+    "main.6bdcb63e.css.map": "/difference-triangles/static/css/main.6bdcb63e.css.map",
+    "main.391eec94.js.map": "/difference-triangles/static/js/main.391eec94.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.6bdcb63e.css",
+    "static/js/main.391eec94.js"
+  ]
+}
