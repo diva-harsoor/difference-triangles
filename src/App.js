@@ -321,44 +321,44 @@ export default function Game() {
     <div className="centered-row"><h1>Difference Triangle Game</h1></div>
     <div className="centered-row">{hasWon ? "🎉 Congrats! You solved the difference triangle!" : checkSuccess(cells, numRows)}</div>
     <div className="center-wrapper">
-    <div className="game-container">
-      <div className="game-board">
+      <div className="game-container">
         <div className="info">
-          <h2>Instructions</h2>
-          Complete the difference triangle such that:
-          <ul>
-            <li>Each cell is the difference of the two above it.</li>
-            <li>A diamond between two cells denotes a difference of 1.</li>
-            <li>Each number is used exactly once.</li>
-          </ul>
-          To play: 
-          <ul>
-            <li>Click on a number and then click on the circle you want to place it in</li>
-            <li>Click on a circle to clear it</li>
-            <li>Click "Enable scratch" to add multiple numbers you are considering to a circle</li>
-          </ul>
+            <h2>Instructions</h2>
+            Complete the difference triangle such that:
+            <ul>
+              <li>Each cell is the difference of the two above it.</li>
+              <li>A diamond between two cells denotes a difference of 1.</li>
+              <li>Each number is used exactly once.</li>
+            </ul>
+            To play: 
+            <ul>
+              <li>Click on a number and then click on the circle you want to place it in</li>
+              <li>Click on a circle to clear it</li>
+              <li>Click "Enable scratch" to add multiple numbers you are considering to a circle</li>
+            </ul>
+          </div>
+        <div className="game-board">
+          <Board
+            numRows={numRows}
+            cells={cells}
+            clueCells={clueCells}
+            cellArrows={cellArrows}
+            selectedNumber={selectedNumber}
+            scratchArrays={scratchArrays}
+            scratch={scratch}
+            onPlay={handlePlay}
+          />
         </div>
-        <Board
-          numRows={numRows}
-          cells={cells}
-          clueCells={clueCells}
-          cellArrows={cellArrows}
-          selectedNumber={selectedNumber}
-          scratchArrays={scratchArrays}
-          scratch={scratch}
-          onPlay={handlePlay}
-        />
+        <div className="keypad">
+          <Keypad
+            status={checkSuccess(cells, numRows)}
+            numbers={numbers}
+            scratch={scratch}
+            onNumPress={handleNumPress}
+            onScratchPress={handleScratchPress}
+          />
+        </div>
       </div>
-      <div className="keypad">
-        <Keypad
-          status={checkSuccess(cells, numRows)}
-          numbers={numbers}
-          scratch={scratch}
-          onNumPress={handleNumPress}
-          onScratchPress={handleScratchPress}
-        />
-      </div>
-    </div>
     </div>
     </>
   );
