@@ -215,7 +215,7 @@ function Keypad({ status, numbers, scratch, onNumPress, onScratchPress }) {
 }
 
 export default function Game() {
-  const [numRows, setNumRows] = useState(3);
+  const [numRows, setNumRows] = useState(2);
   const [cellArrows, setCellArrows] = useState(new Map());
   // const [cellArrows, setCellArrows] = useState([]);
   const [clueCells, setClueCells] = useState([]);
@@ -229,13 +229,20 @@ export default function Game() {
   useEffect(() => {
     let length = (numRows * (numRows + 1))/2;
     // cells, cellArrow could come from a db but there's just not very many possible
+    if (numRows == 2) {
+      const map = new Map([
+        [1,1],
+        [2,0]
+      ])
+      setCellArrows(map);
+    }
     if (numRows == 3) {
       const map = new Map([
         [1, 1],
         [3, 1],
         [5, -1],
       ]);
-      setCellArrows(map)
+      setCellArrows(map);
     }
     else if (numRows == 4) {
       const map = new Map([
@@ -244,7 +251,7 @@ export default function Game() {
         [6,1],
         [8,-1],
       ]);
-      setCellArrows(map)
+      setCellArrows(map);
     }
     else if (numRows == 5) {
       const map = new Map([
@@ -259,6 +266,9 @@ export default function Game() {
 
     const initializeCells = () => {
       let tempCells = Array(length).fill(null);
+      if (numRows == 2) {
+        tempCells[0] = 1;
+      }
       if (numRows == 3) {
         tempCells[0] = 2;
       }
@@ -319,7 +329,7 @@ export default function Game() {
   return (
     <>
     <div className="centered-row"><h1>Difference Triangle Game</h1></div>
-    <div className="centered-row">{hasWon ? "🎉 Congrats! You solved the difference triangle!" : checkSuccess(cells, numRows)}</div>
+    <div className="centered-row">{hasWon ? "🎉 Congrats! The largest exact difference triangle has 5 rows, and you solved it!" : checkSuccess(cells, numRows)}</div>
     <div className="center-wrapper">
       <div className="game-container">
         <div className="info">
