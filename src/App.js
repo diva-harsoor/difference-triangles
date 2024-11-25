@@ -34,7 +34,7 @@ function Number({ index, value, onClick }) {
 
 function Board({numRows, cells, clueCells, cellArrows, selectedNumber, scratchArrays, scratch, onPlay}) {
 
-  const circleSize = `${300 / numRows}px`;
+  const circleSize = `${250 / numRows}px`;
   const fontSize = `${24 * (3 / numRows)}px`; // Adjust the multiplier as needed
   const circleStyle = {
     width: circleSize,
@@ -349,14 +349,16 @@ export default function Game() {
             onPlay={handlePlay}
           />
         </div>
-        <div className="keypad">
-          <Keypad
-            status={checkSuccess(cells, numRows)}
-            numbers={numbers}
-            scratch={scratch}
-            onNumPress={handleNumPress}
-            onScratchPress={handleScratchPress}
-          />
+        <div className="keypad-box">
+          <div className="keypad">
+            <Keypad
+              status={checkSuccess(cells, numRows)}
+              numbers={numbers}
+              scratch={scratch}
+              onNumPress={handleNumPress}
+              onScratchPress={handleScratchPress}
+            />
+          </div>
         </div>
       </div>
     </div>
