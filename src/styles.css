@@ -115,18 +115,20 @@
     flex-direction: column;
     align-items: center;
     margin: 0;
-  }
+    width: 100%;
+}
     
-  .game-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 70%; 
-    height: auto;
-    flex-grow: 1;
-    padding: 20px; 
-  }
-        
+.game-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 70%;
+  height: auto;
+  flex-grow: 1;
+  padding: 20px;
+  min-width: 0;
+}
+      
   .game-board {
     display: flex;
     justify-content: center;
@@ -141,10 +143,11 @@
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-    width: 25%; 
+    width: 300px; 
     padding: 16px;
     background: #CBC3E3;
     text-align: left;
+    flex-shrink: 0;
   }
       
   .keypad-box {
@@ -168,3 +171,8 @@
     font-size: 0.8em; /* Adjust the font size as needed */
   }
   
+  @media (max-width: 1000px) {
+    .info {
+      display: none;
+    }
+  }

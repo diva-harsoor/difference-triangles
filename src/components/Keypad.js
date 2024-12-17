@@ -67,9 +67,11 @@ function Keypad({ status, numbers, scratch, onNumPress, onScratchPress }) {
     }
 
     return (
-        <>
-            {renderNumberBank()}
-        </>
+        <div className="keypad-box">
+            <div className="keypad">
+                {renderNumberBank()}
+            </div>
+        </div>
     );
 };
 

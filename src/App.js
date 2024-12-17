@@ -30,7 +30,7 @@ function checkSuccess(cells, n_rows) {
     return "Congrats! You won the game!";
   }
   return "Congrats! You got it!";
-}
+};
 
 
 export default function Game() {
@@ -148,35 +148,30 @@ export default function Game() {
   return (
     <>
       <div className="centered-row"><h1>Difference Triangle Game</h1></div>
-      <div className="centered-row">{hasWon ? "🎉 Congrats! The largest exact difference triangle has 5 rows, and you solved it!" : checkSuccess(cells, numRows)}</div>
       <div className="center-wrapper">
         <div className="game-container">
           <Info />
-          <div className="game-board">
-            <Board
-              numRows={numRows}
-              cells={cells}
-              clueCells={clueCells}
-              cellArrows={cellArrows}
-              selectedNumber={selectedNumber}
-              scratchArrays={scratchArrays}
-              scratch={scratch}
-              onPlay={handlePlay}
-            />
-          </div>
-          <div className="keypad-box">
-            <div className="keypad">
-              <Keypad
-                status={checkSuccess(cells, numRows)}
-                numbers={numbers}
-                scratch={scratch}
-                onNumPress={handleNumPress}
-                onScratchPress={handleScratchPress}
-              />
-            </div>
-          </div>
+          <Board
+            numRows={numRows}
+            cells={cells}
+            clueCells={clueCells}
+            cellArrows={cellArrows}
+            selectedNumber={selectedNumber}
+            scratchArrays={scratchArrays}
+            scratch={scratch}
+            onPlay={handlePlay}
+          />
+          <Keypad
+            status={checkSuccess(cells, numRows)}
+            numbers={numbers}
+            scratch={scratch}
+            onNumPress={handleNumPress}
+            onScratchPress={handleScratchPress}
+          />
         </div>
       </div>
+      <div className="centered-row">{hasWon ? "🎉 Congrats! The largest exact difference triangle has 5 rows, and you solved it!" : checkSuccess(cells, numRows)}</div>
     </>
   );
-}
+};
+

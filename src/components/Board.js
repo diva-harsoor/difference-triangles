@@ -78,8 +78,10 @@ function Board({ numRows, cells, clueCells, cellArrows, selectedNumber, scratchA
 
 
     return (
-        <div className="board-container">
-            {renderCells()}
+        <div className="game-board">
+            <div className="board-container">
+                {renderCells()}
+            </div>
         </div>
     );
 };
