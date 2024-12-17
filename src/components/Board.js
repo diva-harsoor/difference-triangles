@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Cell from './Cell';
 
-function Board({ numRows, cells, clueCells, cellArrows, selectedNumber, scratchArrays, scratch, onPlay }) {
+function Board({ numRows, cells, clueCells, cellArrows, selectedNumber, scratchArrays, scratch, onPlay, hasWon, checkSuccess }) {
 
     const circleSize = `${250 / numRows}px`;
     const fontSize = `${24 * (3 / numRows)}px`; // Adjust the multiplier as needed
@@ -78,10 +78,14 @@ function Board({ numRows, cells, clueCells, cellArrows, selectedNumber, scratchA
 
 
     return (
+        <div className="center-wrapper">
+        <div className="centered-row"><h1>Difference Triangle Game</h1></div>
         <div className="game-board">
             <div className="board-container">
                 {renderCells()}
             </div>
+        </div>
+        <div className="centered-row">{hasWon ? "🎉 Congrats! The largest exact difference triangle has 5 rows, and you solved it!" : checkSuccess(cells, numRows)}</div>
         </div>
     );
 };

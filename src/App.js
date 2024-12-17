@@ -147,7 +147,6 @@ export default function Game() {
 
   return (
     <>
-      <div className="centered-row"><h1>Difference Triangle Game</h1></div>
       <div className="center-wrapper">
         <div className="game-container">
           <Info />
@@ -160,6 +159,8 @@ export default function Game() {
             scratchArrays={scratchArrays}
             scratch={scratch}
             onPlay={handlePlay}
+            hasWon={hasWon}
+            checkSuccess={checkSuccess}
           />
           <Keypad
             numbers={numbers}
@@ -169,7 +170,6 @@ export default function Game() {
           />
         </div>
       </div>
-      <div className="centered-row">{hasWon ? "🎉 Congrats! The largest exact difference triangle has 5 rows, and you solved it!" : checkSuccess(cells, numRows)}</div>
     </>
   );
 };
