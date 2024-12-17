@@ -30,11 +30,6 @@ function Keypad({ status, numbers, scratch, onNumPress, onScratchPress }) {
         }
 
         let bank = [];
-        if (status) {
-            bank.push(
-                <button key={`status`} className="keypad-button">{status}</button>
-            );
-        }
         let factor_long = numbers.length / factor_short;
         let counter = 0;
         for (let row_i = 0; row_i < factor_long; row_i++) {

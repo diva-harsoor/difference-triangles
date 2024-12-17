@@ -7,7 +7,7 @@ function Info() {
             Complete the difference triangle such that:
             <ul>
                 <li>Each cell is the difference of the two above it.</li>
-                <li>A diamond between two cells denotes a difference of 1.</li>
+                <li>A ±1 symbol between two cells denotes a difference of 1.</li>
                 <li>Each number is used exactly once.</li>
             </ul>
             To play:
