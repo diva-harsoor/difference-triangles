@@ -162,7 +162,6 @@ export default function Game() {
             onPlay={handlePlay}
           />
           <Keypad
-            status={checkSuccess(cells, numRows)}
             numbers={numbers}
             scratch={scratch}
             onNumPress={handleNumPress}
